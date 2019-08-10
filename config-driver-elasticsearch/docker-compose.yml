@@ -1,0 +1,26 @@
+version: "3.5"
+services:
+  elasticsearch:
+    image: elasticsearch:7.3.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+  fluentbit:
+    build: .
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    depends_on:
+      - elasticsearch
+  ubuntu:
+    image: ubuntu
+    command: [/bin/echo, "Kevcodez"]
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd
+      options:
+        tag: docker-ubuntu

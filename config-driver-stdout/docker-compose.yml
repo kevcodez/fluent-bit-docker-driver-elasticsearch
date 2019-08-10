@@ -1,0 +1,16 @@
+version: "3.5"
+services:
+  fluentbit:
+    build: .
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+  ubuntu:
+    image: ubuntu
+    command: [/bin/echo, "Kevcodez"]
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd
+      options:
+        tag: docker-ubuntu
